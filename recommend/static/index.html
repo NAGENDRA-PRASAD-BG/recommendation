@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Recommendations by Category</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        .container { width: 80%; margin: auto; padding: 20px; }
+        h1 { text-align: center; }
+        #recommendations { margin-top: 20px; }
+        .product { margin: 10px 0; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Product Recommendation System</h1>
+        <label for="category">Enter Category:</label>
+        <input type="text" id="category" placeholder="e.g. Electronics">
+        <button onclick="getRecommendations()">Get Recommendations</button>
+        <div id="recommendations"></div>
+    </div>
+
+    <script>
+        async function getRecommendations() {
+            const category = document.getElementById('category').value;
+            if (category) {
+                const response = await fetch(`/recommend?category=${category}`);
+                const recommendations = await response.json();
+                
+                const recommendationsDiv = document.getElementById('recommendations');
+                recommendationsDiv.innerHTML = '';
+
+                if (recommendations.length === 0) {
+                    recommendationsDiv.innerHTML = '<p>No recommendations found.</p>';
+                } else {
+                    recommendationsDiv.innerHTML = '<h2>Recommended Products:</h2>';
+                    recommendations.forEach(prod => {
+                        const productDiv = document.createElement('div');
+                        productDiv.className = 'product';
+                        productDiv.textContent = prod;
+                        recommendationsDiv.appendChild(productDiv);
+                    });
+                }
+            } else {
+                alert('Please enter a category.');
+            }
+        }
+    </script>
+</body>
+</html>
